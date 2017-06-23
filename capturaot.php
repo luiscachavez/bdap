@@ -23,11 +23,23 @@ $rutaar =		$_POST['rutaar'];
 $observ = 		$_POST['observ'];
 
 $pricap = ($_POST['pricap'] == "si" );
-if ($pricap)
-	{
-	$validado = valida();
+$n = 0;
 
+if ($pricap)
+{
+	$validado = valida($refsisa,"refsisa");
+	if (!$validado)
+	{
+		$errores[n] = "Referencia SISA";
+		$n++;
 	}
+	$validado = valida($ordtra, "ordtra");
+	if (!$validado)
+	{
+		$errores[n] = "Orden de trabajo";
+		$n++;
+	}
+}
 
 if ($pricap && $validado)
 {
@@ -58,8 +70,91 @@ Nodo A<br />
 <input type="text" name="nodo_a" value="<?= $nodo_a ?>" /><br />
 Nodo Z<br />
 <input type="text" name="nodo_z" value="<?= $nodo_z ?>" /><br />
-Trayecto<br>
-
-
-
+Trayecto<br />
+<input type="text" name="trayecto" value="<?= $trayecto ?>" /><br />
+CLLI Nodo A<br />
+<input type="text" name="clli_a" value="<?= $clli_a ?>" /><br />
+CLLI nodo Z<br />
+<input type="text" name="clli_z" value="<?= $clli_z ?>" /><br />
+Version de la OT<br />
+<input type="text" name="version_ot" value="<?= $version_ot ?>" /><br />
+Conmutacion<br />
+<input type="text" name="conmutacion" value="<?= $conmutacion ?>" /><br />
+Fecha de recepcion<br />
+<input type="date" name="fecrec" value="<?= $fecrec ?>" /><br />
+Fecha programada<br />
+<input type="date" name="fecpro" value="<?= $fecpro ?>" /><br />
+Fecha objetivo<br />
+<input type="date" name="fecobj" value="<?= $fecobj ?>" /><br />
+Fecha real programada<br />
+<input type="date" name="ferepr" value="<?= $ferepr ?>" /><br />
+Fecha real de ejecucion<br />
+<input type="date" name="fereej" value="<?= $fereej ?>" /><br />
+Fecha de liquidacion<br />
+<input type="date" name="fecliq" value="<?= $fecliq ?>" /><br />
+Ruta archivo<br />
+<input type="file" name="rutaar" /><br />
+Observaciones<br />
+<input type="text" name="observ" value="<?= $observ ?>" /><br />
+<input type="submit" name="Enviar" /><br />
 </form>
+<?php
+function valida($valor, $variab)
+{
+	$valida = true;
+	switch($variab){
+		case 'refsisa'  //Valida la referencia SISA
+			$divsisa = preg_split("/-/",$valor);
+			if (count($divsisa) != 3)
+			{
+				$valida = false;
+			}
+			else
+			{
+				if (strlen($divsisa[0]) < 3 || strlen($divsisa[0]) == 4 || strlen($divsisa[0]) > 6)
+				{
+					$valida = false;
+				}
+				else
+				{
+					$tiposisa = false;
+					$conta = 1;
+					while ($conta < 3)
+					{
+						$tiposisa = preg_match("/[^0-9]/", $divsisa[$conta]);
+						if($tiposisa || strlen($divsisa[$conta])) != 4)
+						{
+							$valida = false;
+							$conta = 3;
+						}
+						$conta++;
+					}
+				}
+			}	
+			
+	}	
+		case ordtra  //valida la orden de trabajo
+			$divortr = preg_split("/-/",$valor);
+			if (count($divortr) != 2)
+			{
+				$valida = false;
+			}
+}			if (preg_match("/^[0-9]/",$divortr[0]) == false)
+			{
+				$valida = false;
+			}
+			else
+			{
+				if (preg_match("/^[\w]+$/",$divortr[0]) == false)
+				{
+					$valida = false;
+				}
+				else
+				{
+					if (preg_match("/[^0-9]/",$divortr[1]))
+					{
+						$valida = false;
+					}
+				}
+			}
+?>
