@@ -21,33 +21,75 @@ $fereej = 		$_POST['fereej'];
 $fecliq = 		$_POST['fecliq'];
 $rutaar =		$_POST['rutaar'];
 $observ = 		$_POST['observ'];
-
 $pricap = ($_POST['pricap'] == "si" );
 $n = 0;
-
 if ($pricap)
 {
-	$validado = valida($refsisa,"refsisa");
-	if (!$validado)
+	if (!isset($_POST['refsisa']))
 	{
-		$errores[n] = "Referencia SISA";
+		$validado = false;
+		$errores[$n]
 		$n++;
 	}
-	$validado = valida($ordtra, "ordtra");
-	if (!$validado)
+	else
+	{	
+		$validado = valida($refsisa,"refsisa");
+		if (!$validado)
+		{
+			$errores[$n] = "Referencia SISA";
+			$n++;
+		}
+	}
+	if (!isset($_POST['ordtra']))
 	{
-		$errores[n] = "Orden de trabajo";
+		$validado = false;
+		$errores[$n] = "OT no capturada en pantalla";
+		$n++;
+	}	
+	else
+	{	
+		$validado = valida($ordtra, "ordtra");
+		if (!$validado)
+		{
+			$validado = false;
+			$errores[$n] = "Orden de trabajo";
+			$n++;
+		}
+	}
+	if (!isset($_POST['folio']))
+	{
+		$validado = false;
+		$errores[$n] = "Folio no capturado";
 		$n++;
 	}
+	else
+	{	
+		$validado = valida($folio, "folio");
+		if (!$validado)
+		{
+			$errores[$n] = "Folio mal capturado";
+			$n++;
+		}	
+	}
+	if (!isset($_POST['estado']))
+	{
+		$validado = false;
+		$errores[$n] = "Estado";
+		$n++;
+	}
+	if (!isset($_POST['tiptrab']))
+	{
+		$validado = false;
+		$errores[$n] = "Tipo de trabajo";
+		$n++;
+	}
+	if (!isset($_POST['nodo_a']))
+		
 }
-
 if ($pricap && $validado)
 {
 // Insertar o actualizar registro en base de datos
 }
-
-
-
 ?>
 
 <form name="capturaot" action="<?= $PHP_SELF ?>" method="POST">
@@ -157,4 +199,12 @@ function valida($valor, $variab)
 					}
 				}
 			}
+		case folio //valida el folio del enlace
+			if (preg_match("/[^0-9]/", $valor))
+			{
+				$valida = false;
+			}
 ?>
+
+    
+
